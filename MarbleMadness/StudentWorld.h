@@ -2,7 +2,6 @@
 #define STUDENTWORLD_H_
 
 #include "GameWorld.h"
-#include "Level.h"
 #include "Actor.h"
 #include <string>
 
@@ -15,9 +14,11 @@ public:
   virtual int init();
   virtual int move();
   virtual void cleanUp();
+  int loadLevel();
 
 private:
-	vector<Actor> m_Actors;
+	Actor* m_Player;
+	std::vector<Actor*> m_Actors;
 };
 
 #endif // STUDENTWORLD_H_

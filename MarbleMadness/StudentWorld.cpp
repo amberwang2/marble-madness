@@ -1,5 +1,6 @@
 #include "StudentWorld.h"
 #include "GameConstants.h"
+#include "Level.h"
 #include <string>
 using namespace std;
 
@@ -15,8 +16,14 @@ StudentWorld::StudentWorld(string assetPath)
 {
 }
 
+int StudentWorld::loadLevel()
+{
+
+}
+
 int StudentWorld::init()
 {
+    
     return GWSTATUS_CONTINUE_GAME;
 }
 
