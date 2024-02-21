@@ -10,7 +10,7 @@ void Avatar::uniqueAction() {
 		switch (ch)
 		{
 		case KEY_PRESS_ESCAPE:
-			setHealth(0);
+			kill();
 			break;
 		case KEY_PRESS_LEFT:
 			setDirection(left);
