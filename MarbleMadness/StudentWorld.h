@@ -17,9 +17,10 @@ public:
   int loadLevel();
   void insertActor(Actor* actor);
   bool moveable(int x, int y);
+  int getActorCount() { return m_Actors.size(); }
+  void getActor(Actor* actor, int n) { actor = m_Actors[n]; }
 
 private:
-	Actor* m_Player;
 	std::vector<Actor*> m_Actors;
 };
 

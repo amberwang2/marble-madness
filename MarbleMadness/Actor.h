@@ -10,10 +10,16 @@ class Actor : public GraphObject
 {
 public:
 	Actor(StudentWorld* world, int imageID, int startX, int startY, int dir = right) : GraphObject(imageID, startX, startY, dir), m_world(world) { setVisible(true); }
-	virtual void doSomething() { return; }
+	virtual void doSomething() {
+		if (!isAlive())
+			return;
+		uniqueAction();
+	}
+	virtual void uniqueAction() { return; }
 	virtual bool canMoveOn() const { return false; }
 	virtual bool isTransient() const { return true; }
 	virtual bool isPea() const { return false; }
+	virtual bool attackable() const { return false; }
 	bool isAlive() const { return m_alive; }
 	void kill() { m_alive = false; }
 	StudentWorld* getWorld() const { return m_world; }
@@ -26,36 +32,44 @@ class Dynamic : public Actor
 {
 public:
 	Dynamic(StudentWorld* world, int imageID, int startX, int startY, int dir = right) : Actor(world, IID_PLAYER, startX, startY, dir) {}
-	virtual void doSomething() {
-		if (!isAlive())
-			return;
-		uniqueAction();
-	}
-	virtual void uniqueAction() { return; }
+	virtual bool attackable() { return true; }
 	virtual void damaged() {
 		m_hp -= 2;
-		healthCheck();
+		damagedAction();
 	}
 	virtual void damagedAction() {
-		// play sound, etc
+		if (healthCheck())
+		{
+			impact();
+			// something
+		}
+		else
+		{
+			dead();
+			// dead
+		}
 	}
-	virtual void attacked() {
-		damaged();
-		damagedAction();
-		return;
-	}
+	virtual void impact() {}; // play impact sound
+	virtual void dead() {}; // play death sound
 	void setHealth(int hp) {
 		m_hp = hp;
 	}
-	void healthCheck() { if (m_hp == 0) kill(); }
+	bool healthCheck() {
+		if (m_hp == 0) {
+			kill();
+			return false;
+		}
+		return true;
+	}
 private:
 	int m_hp;
+	int m_bonus;
 };
 
 class Static : public Actor
 {
 public:
-	Static(StudentWorld* world, int imageID, int startX, int startY, int dir = right) : Actor(world, imageID, startX, startY) {}
+	Static(StudentWorld* world, int imageID, int startX, int startY, int dir = none) : Actor(world, imageID, startX, startY) {}
 private:
 };
 
@@ -73,7 +87,19 @@ class Pea : public Static
 public:
 	Pea(StudentWorld* world, int startX, int startY, int dir) : Static(world, IID_PEA, startX, startY, dir) {}
 	virtual bool isPea() { return true; }
-	virtual void uniqueAction() { return; }
+	virtual void uniqueAction() {
+		Actor* actor;
+		for (int i = 0; i < getWorld()->getActorCount(); i++)
+		{
+			getWorld()->getActor(actor, i);
+			if (actor->getX() == getX() && actor->getY() == getY())
+				if (actor->attackable()) // avatar, bot, marble
+					return;
+				else if (actor->isTransient()) // wall, factory
+					return;
+		}
+	}
+	
 private:
 };
 
