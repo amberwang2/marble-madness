@@ -2,14 +2,15 @@
 #define ACTOR_H_
 
 #include "GraphObject.h"
-#include "StudentWorld.h"
-#include "SoundFX.h"
+// #include "SoundFX.h"
+
+class StudentWorld;
 
 // Students:  Add code to this file, Actor.cpp, StudentWorld.h, and StudentWorld.cpp
 class Actor : public GraphObject
 {
 public:
-	Actor(StudentWorld* world, int imageID, int startX, int startY, int dir = right) : GraphObject(imageID, startX, startY, dir), m_world(world) { setVisible(true); }
+	Actor(StudentWorld* world, int imageID, int startX, int startY, int dir) : GraphObject(imageID, startX, startY, dir), m_world(world) { setVisible(true); }
 	virtual void doSomething() {
 		if (!isAlive())
 			return;
@@ -69,7 +70,7 @@ private:
 class Static : public Actor
 {
 public:
-	Static(StudentWorld* world, int imageID, int startX, int startY, int dir = none) : Actor(world, imageID, startX, startY) {}
+	Static(StudentWorld* world, int imageID, int startX, int startY, int dir = none) : Actor(world, imageID, startX, startY, dir) {}
 private:
 };
 
@@ -82,26 +83,33 @@ private:
 	int m_peas;
 };
 
-class Pea : public Static
+class Wall : public Static
 {
 public:
-	Pea(StudentWorld* world, int startX, int startY, int dir) : Static(world, IID_PEA, startX, startY, dir) {}
-	virtual bool isPea() { return true; }
-	virtual void uniqueAction() {
-		Actor* actor;
-		for (int i = 0; i < getWorld()->getActorCount(); i++)
-		{
-			getWorld()->getActor(actor, i);
-			if (actor->getX() == getX() && actor->getY() == getY())
-				if (actor->attackable()) // avatar, bot, marble
-					return;
-				else if (actor->isTransient()) // wall, factory
-					return;
-		}
-	}
-	
+	Wall(StudentWorld* world, int startX, int startY) : Static(world, IID_WALL, startX, startY) {};
 private:
 };
+
+// class Pea : public Static
+// {
+// public:
+// 	Pea(StudentWorld* world, int startX, int startY, int dir) : Static(world, IID_PEA, startX, startY, dir) {}
+// 	virtual bool isPea() { return true; }
+// 	virtual void uniqueAction() {
+// 		Actor* actor;
+// 		for (int i = 0; i < getWorld()->getActorCount(); i++)
+// 		{
+// 			getWorld()->getActor(actor, i);
+// 			if (actor->getX() == getX() && actor->getY() == getY())
+// 				if (actor->attackable()) // avatar, bot, marble
+// 					return;
+// 				else if (actor->isTransient()) // wall, factory
+// 					return;
+// 		}
+// 	}
+	
+// private:
+// };
 
 //class Bot : public Dynamic
 //{
@@ -208,10 +216,4 @@ private:
 //private:
 //};
 //
-//class Wall : public Statics
-//{
-//public:
-//	Wall(StudentWorld* world, int startX, int startY);
-//private:
-//};
 #endif // ACTOR_H_

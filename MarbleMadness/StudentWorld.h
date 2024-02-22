@@ -2,10 +2,10 @@
 #define STUDENTWORLD_H_
 
 #include "GameWorld.h"
+#include "Actor.h"
 #include <string>
 
 // Students:  Add code to this file, StudentWorld.cpp, Actor.h, and Actor.cpp
-class Actor;
 
 class StudentWorld : public GameWorld
 {
@@ -14,7 +14,7 @@ public:
   virtual int init();
   virtual int move();
   virtual void cleanUp();
-  int loadLevel();
+  int loadLevel(int n);
   void insertActor(Actor* actor);
   bool moveable(int x, int y);
   int getActorCount() { return m_Actors.size(); }

@@ -32,27 +32,27 @@ void Avatar::uniqueAction() {
 			if (getWorld()->moveable(getX(), getY() + 1))
 				moveTo(getX() + 1, getY());
 			break;
-		case KEY_PRESS_SPACE:
-			if (m_peas > 0)
-			{
-				switch (getDirection())
-				{
-				case left:
-					getWorld()->insertActor(new Pea(getWorld(), getX() - 1, getY(), getDirection()));
-					break;
-				case right:
-					getWorld()->insertActor(new Pea(getWorld(), getX() + 1, getY(), getDirection()));
-					break;
-				case up:
-					getWorld()->insertActor(new Pea(getWorld(), getX(), getY() - 1, getDirection()));
-					break;
-				case down:
-					getWorld()->insertActor(new Pea(getWorld(), getX(), getY() + 1, getDirection()));
-					break;
-				}
-			}
-			break;
-			// etc…
+		// case KEY_PRESS_SPACE:
+		// 	if (m_peas > 0)
+		// 	{
+		// 		switch (getDirection())
+		// 		{
+		// 		case left:
+		// 			getWorld()->insertActor(new Pea(getWorld(), getX() - 1, getY(), getDirection()));
+		// 			break;
+		// 		case right:
+		// 			getWorld()->insertActor(new Pea(getWorld(), getX() + 1, getY(), getDirection()));
+		// 			break;
+		// 		case up:
+		// 			getWorld()->insertActor(new Pea(getWorld(), getX(), getY() - 1, getDirection()));
+		// 			break;
+		// 		case down:
+		// 			getWorld()->insertActor(new Pea(getWorld(), getX(), getY() + 1, getDirection()));
+		// 			break;
+		// 		}
+		// 	}
+		// 	break;
+			// etcï¿½
 		}
 	}
 
