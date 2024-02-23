@@ -19,7 +19,7 @@ public:
   void insertActor(Actor* actor);
   bool moveable(int x, int y);
   int getActorCount() { return m_Actors.size(); }
-  void getActor(Actor* actor, int n) { actor = m_Actors[n]; }
+  void getActor(Actor* &actor, int n) { actor = m_Actors[n]; }
 
 private:
 	std::vector<Actor*> m_Actors;

@@ -11,11 +11,7 @@ class Actor : public GraphObject
 {
 public:
 	Actor(StudentWorld* world, int imageID, int startX, int startY, int dir) : GraphObject(imageID, startX, startY, dir), m_world(world) { setVisible(true); }
-	virtual void doSomething() {
-		if (!isAlive())
-			return;
-		uniqueAction();
-	}
+	virtual void doSomething();
 	virtual void uniqueAction() { return; }
 	virtual bool canMoveOn() const { return false; }
 	virtual bool isTransient() const { return true; }

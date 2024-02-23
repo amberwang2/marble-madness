@@ -2,6 +2,13 @@
 #include "StudentWorld.h"
 
 // Students:  Add code to this file, Actor.h, StudentWorld.h, and StudentWorld.cpp
+void Actor::doSomething()
+{
+	if (!isAlive())
+			return;
+		uniqueAction();
+}
+
 void Avatar::uniqueAction() {
 	int ch;
 	if (getWorld()->getKey(ch))
