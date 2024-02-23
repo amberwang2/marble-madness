@@ -60,9 +60,10 @@ int StudentWorld::loadLevel(int n)
 
 int StudentWorld::init()
 {
-    if (loadLevel(getLevel()) == -1)
+    int num = loadLevel(getLevel());
+    if (num == -1)
         return GWSTATUS_LEVEL_ERROR;
-    else if (loadLevel(getLevel()) == 1)
+    else if (num == 1)
         return GWSTATUS_PLAYER_WON;
     return GWSTATUS_CONTINUE_GAME;
 }
