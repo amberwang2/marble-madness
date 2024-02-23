@@ -94,3 +94,16 @@ void StudentWorld::insertActor(Actor* actor)
 {
     m_Actors.push_back(actor);
 }
+
+bool StudentWorld::moveable(int x, int y)
+{
+    Actor* actor;
+    for (int i = 0; i < getActorCount(); i++)
+    {
+        getActor(actor, i);
+        if (actor->getX() == x && actor->getY() == y)
+            if (!actor->canMoveOn())
+                return false;
+    }
+    return true;
+}
