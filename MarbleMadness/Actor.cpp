@@ -22,22 +22,22 @@ void Avatar::uniqueAction() {
 		case KEY_PRESS_LEFT:
 			setDirection(left);
 			if (getWorld()->moveable(getX() - 1, getY()))
-				moveTo(getX(), getY() - 1);
+				moveTo(getX() - 1, getY());
 			break;
 		case KEY_PRESS_RIGHT:
 			setDirection(right);
 			if (getWorld()->moveable(getX() + 1, getY()))
-				moveTo(getX(), getY() + 1);
+				moveTo(getX() + 1, getY());
 			break;
 		case KEY_PRESS_UP:
 			setDirection(up);
 			if (getWorld()->moveable(getX(), getY() - 1))
-				moveTo(getX() - 1, getY());
+				moveTo(getX(), getY() - 1);
 			break;
 		case KEY_PRESS_DOWN:
 			setDirection(down);
 			if (getWorld()->moveable(getX(), getY() + 1))
-				moveTo(getX() + 1, getY());
+				moveTo(getX(), getY() + 1);
 			break;
 		// case KEY_PRESS_SPACE:
 		// 	if (m_peas > 0)
