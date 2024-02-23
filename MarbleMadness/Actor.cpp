@@ -31,13 +31,13 @@ void Avatar::uniqueAction() {
 			break;
 		case KEY_PRESS_UP:
 			setDirection(up);
-			if (getWorld()->moveable(getX(), getY() - 1))
-				moveTo(getX(), getY() - 1);
+			if (getWorld()->moveable(getX(), getY() + 1))
+				moveTo(getX(), getY() + 1);
 			break;
 		case KEY_PRESS_DOWN:
 			setDirection(down);
-			if (getWorld()->moveable(getX(), getY() + 1))
-				moveTo(getX(), getY() + 1);
+			if (getWorld()->moveable(getX(), getY() - 1))
+				moveTo(getX(), getY() - 1);
 			break;
 		// case KEY_PRESS_SPACE:
 		// 	if (m_peas > 0)
