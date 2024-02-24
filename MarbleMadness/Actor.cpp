@@ -59,7 +59,6 @@ void Avatar::uniqueAction() {
 		// 		}
 		// 	}
 		// 	break;
-			// etc�
 		}
 	}
 

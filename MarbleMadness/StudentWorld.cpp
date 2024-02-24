@@ -23,7 +23,6 @@ StudentWorld::~StudentWorld()
 
 int StudentWorld::loadLevel(int n)
 {
-    n++;
     string curLevel;
     if (n < 10)
         curLevel = "level0" + to_string(n) + ".txt";
@@ -96,7 +95,7 @@ void StudentWorld::insertActor(Actor* actor)
     m_Actors.push_back(actor);
 }
 
-bool StudentWorld::moveable(int x, int y)
+bool StudentWorld::moveable(double x, double y)
 {
     Actor* actor;
     for (int i = 0; i < getActorCount(); i++)

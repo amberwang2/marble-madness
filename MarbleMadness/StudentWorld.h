@@ -17,7 +17,7 @@ public:
   virtual void cleanUp();
   int loadLevel(int n);
   void insertActor(Actor* actor);
-  bool moveable(int x, int y);
+  bool moveable(double x, double y);
   int getActorCount() { return m_Actors.size(); }
   void getActor(Actor* &actor, int n) { actor = m_Actors[n]; }
 
