@@ -67,6 +67,7 @@ public:
 		}
 		return true;
 	}
+	void fire();
 private:
 	int m_bonus;
 };
@@ -84,14 +85,18 @@ private:
 class Bot : public Agent
 {
 public:
-	Bot(StudentWorld* world, int imageID, int startX, int startY, int bonus, int dir = right) : Agent(world, imageID, startX, startY, dir), m_bonus(bonus) {}
+	Bot(StudentWorld* world, int imageID, int startX, int startY, int bonus, int dir = right) : Agent(world, imageID, startX, startY, dir), m_tickCount(0), m_bonus(bonus) {}
 	virtual bool bobotic() const { return true; }
 	virtual void uniqueAction();
+	virtual void botAction();
+	virtual void moveBot() = 0;
+	bool canMoveInDir();
+	bool playerShootable();
 	virtual void impact();
 	virtual void dead();
 	bool takeAction();
 private:
-	int m_ticks;
+	int m_tickCount;
 	int m_bonus;
 };
 
@@ -99,8 +104,17 @@ class RageBot : public Bot
 {
 public:
 	RageBot(StudentWorld* world, int startX, int startY, int dir) : Bot(world, IID_RAGEBOT, startX, startY, 100, dir) { setHp(10); }
-	virtual void uniqueAction() { return; }
+	virtual void moveBot();
 private:
+};
+
+class ThiefBot : public Bot
+{
+public:
+	ThiefBot(StudentWorld* world, int startX, int startY, int bonus, int imageID = IID_THIEFBOT) : Bot(world, imageID, startX, startY, bonus), m_turnDist(randInt(1, 6)) { setHp(5); }
+	virtual void botAction() { return; }
+private:
+	int m_turnDist;
 };
 
 class Marble : public Agent
@@ -201,16 +215,6 @@ public:
 private:
 };
 
-
-//
-//class ThiefBot : public Bot
-//{
-//public:
-//	ThiefBot(StudentWorld* world, int startX, int startY, int bonus, int imageID = IID_THIEFBOT) : Bot(world, imageID, startX, startY, bonus), m_turnDist(randInt(1, 6)) { setHealth(5); }
-//	virtual void uniqueAction() { return; }
-//private:
-//	int m_turnDist;
-//};
 //
 //class MeanThiefBot : public ThiefBot
 //{

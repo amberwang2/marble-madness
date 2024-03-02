@@ -51,6 +51,12 @@ int StudentWorld::loadLevel(int n)
                 case Level::player:
                     m_Actors.insert(m_Actors.begin(), new Avatar(this, i, j));
                     break;
+                case Level::horiz_ragebot:
+                    insertActor(new RageBot(this, i, j, 0));
+                    break;
+                case Level::vert_ragebot:
+                    insertActor(new RageBot(this, i, j, 270));
+                    break;
                 case Level::wall:
                     insertActor(new Wall(this, i, j));
                     break;
@@ -141,7 +147,7 @@ bool StudentWorld::moveable(double x, double y)
         getActor(actor, i);
         if (actor->getX() == x && actor->getY() == y)
         {
-            if (!actor->canMoveOn() && actor->isAlive())
+            if (!actor->canMoveOn() && actor->isVisible())
                 return false;
         }
     }
@@ -156,7 +162,7 @@ bool StudentWorld::marbleMoveable(double x, double y)
         getActor(actor, i);
         if (actor->getX() == x && actor->getY() == y)
         {
-            if (!actor->MarbleCanPass() && actor->isAlive())
+            if (!actor->MarbleCanPass() && actor->isVisible())
                 return false;
         }
     }
@@ -167,12 +173,17 @@ void StudentWorld::marbleAt(Actor* &actor, double x, double y)
 {
     actor = nullptr;
     for (int i = 0; i < getActorCount(); i++)
-    {
-        if (m_Actors[i]->getX() == x && m_Actors[i]->getY() == y && m_Actors[i]->swallowable())
-        {
+        if (m_Actors[i]->getX() == x && m_Actors[i]->getY() == y && m_Actors[i]->swallowable() && m_Actors[i]->isVisible())
             actor = m_Actors[i];
-        }
-    }
+}
+
+bool StudentWorld::passTile(double x, double y)
+{
+    Actor* actor;
+    for (int i = 0; i < getActorCount(); i++)
+        if (m_Actors[i]->getX() == x && m_Actors[i]->getY() == y && m_Actors[i]->isVisible() && m_Actors[i]->attackable())
+            return false;
+    return true;
 }
 
 bool StudentWorld::attemptPush(double x, double y, int dir)

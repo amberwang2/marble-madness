@@ -11,6 +11,29 @@ void Actor::doSomething()
 	}
 }
 
+void Agent::fire()
+{
+	if (bobotic())
+		getWorld()->playSound(SOUND_ENEMY_FIRE);
+	else
+		getWorld()->playSound(SOUND_PLAYER_FIRE);
+	switch (getDirection())
+	{
+	case left:
+		getWorld()->insertActor(new Pea(getWorld(), getX() - 1, getY(), getDirection()));
+		break;
+	case right:
+		getWorld()->insertActor(new Pea(getWorld(), getX() + 1, getY(), getDirection()));
+		break;
+	case up:
+		getWorld()->insertActor(new Pea(getWorld(), getX(), getY() + 1, getDirection()));
+		break;
+	case down:
+		getWorld()->insertActor(new Pea(getWorld(), getX(), getY() - 1, getDirection()));
+		break;
+	}
+}
+
 void Avatar::uniqueAction() {
 	int ch;
 	if (getWorld()->getKey(ch))
@@ -44,22 +67,7 @@ void Avatar::uniqueAction() {
 		case KEY_PRESS_SPACE:
 		 	if (getAmmo() > 0)
 		 	{
-				getWorld()->playSound(SOUND_PLAYER_FIRE);
-		 		switch (getDirection())
-		 		{
-		 		case left:
-		 			getWorld()->insertActor(new Pea(getWorld(), getX() - 1, getY(), getDirection()));
-		 			break;
-		 		case right:
-		 			getWorld()->insertActor(new Pea(getWorld(), getX() + 1, getY(), getDirection()));
-		 			break;
-		 		case up:
-		 			getWorld()->insertActor(new Pea(getWorld(), getX(), getY() + 1, getDirection()));
-		 			break;
-		 		case down:
-		 			getWorld()->insertActor(new Pea(getWorld(), getX(), getY() - 1, getDirection()));
-		 			break;
-		 		}
+				fire();
 				setAmmo(getAmmo() - 1);
 		 	}
 		 	break;
@@ -70,6 +78,142 @@ void Avatar::uniqueAction() {
 
 void Avatar::impact() { getWorld()->playSound(SOUND_PLAYER_IMPACT); }
 void Avatar::dead() { getWorld()->playSound(SOUND_PLAYER_DIE); }
+
+bool Bot::takeAction()
+{
+	int ticks = (28 - getWorld()->getLevel()) / 4;
+	if (ticks < 3)
+		ticks = 3;
+	if (m_tickCount == ticks)
+	{
+		m_tickCount = 0;
+		return true;
+	}
+	else
+	{
+		m_tickCount++;
+		return false;
+	}
+}
+
+void Bot::uniqueAction()
+{
+	if (takeAction())
+	{
+		botAction();
+		moveBot();
+	}
+	else
+		return;
+}
+
+void Bot::botAction()
+{
+	if (playerShootable())
+		fire();
+}
+
+bool Bot::playerShootable()
+{
+	switch (getDirection())
+	{
+	case left:
+		if (getWorld()->playerY() == getY() && getWorld()->playerX() < getX())
+		{
+			for (int i = getWorld()->playerX() + 1; i < getX(); i++)
+				if (!getWorld()->passTile(i, getY()))
+					return false;
+			return true;
+		}
+		break;
+	case right:
+		if (getWorld()->playerY() == getY() && getWorld()->playerX() > getX())
+		{
+			for (int i = getX() + 1; i < getWorld()->playerX(); i++)
+				if (!getWorld()->passTile(i, getY()))
+					return false;
+			return true;
+		}
+		break;
+	case up:
+		if (getWorld()->playerX() == getX() && getWorld()->playerY() > getY())
+		{
+			for (int i = getY() + 1; i < getWorld()->playerY(); i++)
+				if (!getWorld()->passTile(getX(), i))
+					return false;
+			return true;
+		}
+		break;
+	case down:
+		if (getWorld()->playerX() == getX() && getWorld()->playerY() < getY())
+		{
+			for (int i = getWorld()->playerY() + 1; i < getY(); i++)
+				if (!getWorld()->passTile(getX(), i))
+					return false;
+			return true;
+		}
+		break;
+	}
+	return false;
+}
+
+bool Bot::canMoveInDir()
+{
+	switch (getDirection())
+	{
+	case left:
+		if (getWorld()->moveable(getX() - 1, getY()))
+		{
+			moveTo(getX() - 1, getY());
+			return true;
+		}
+		return false;
+		break;
+	case right:
+		if (getWorld()->moveable(getX() + 1, getY()))
+		{
+			moveTo(getX() + 1, getY());
+			return true;
+		}
+		return false;
+		break;
+	case up:
+		if (getWorld()->moveable(getX(), getY() + 1))
+		{
+			moveTo(getX(), getY() + 1);
+			return true;
+		}
+		return false;
+		break;
+	case down:
+		if (getWorld()->moveable(getX(), getY() - 1))
+		{
+			moveTo(getX(), getY() - 1);
+			return true;
+		}
+		return false;
+		break;
+	}
+}
+
+void Bot::impact() { getWorld()->playSound(SOUND_ROBOT_IMPACT); }
+void Bot::dead()
+{
+	getWorld()->playSound(SOUND_ROBOT_DIE);
+	getWorld()->increaseScore(m_bonus);
+}
+
+
+void RageBot::moveBot()
+{
+	if (!canMoveInDir())
+	{
+		if (getDirection() < 180)
+			setDirection(getDirection() + 180);
+		else
+			setDirection(getDirection() - 180);
+	}
+}
 
 bool Marble::bePushedTo(int dir)
 {

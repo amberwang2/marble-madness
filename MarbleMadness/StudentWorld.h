@@ -22,6 +22,7 @@ public:
   int getActorCount() { return m_Actors.size(); }
   void getActor(Actor* &actor, int n) { actor = m_Actors[n]; }
   void marbleAt(Actor* &actor, double x, double y);
+  bool passTile(double x, double y);
   bool attemptPush(double x, double y, int dir);
   void crystalCollected() { m_cCrystals++; }
   bool complete() { return m_cCrystals == m_nCrystals; }
