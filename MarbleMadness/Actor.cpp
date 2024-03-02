@@ -100,17 +100,21 @@ void Bot::uniqueAction()
 {
 	if (takeAction())
 	{
-		botAction();
-		moveBot();
+		if (!botAction())
+			moveBot();
 	}
 	else
 		return;
 }
 
-void Bot::botAction()
+bool Bot::botAction()
 {
 	if (playerShootable())
+	{
 		fire();
+		return true;
+	}
+	return false;
 }
 
 bool Bot::playerShootable()
@@ -215,6 +219,44 @@ void RageBot::moveBot()
 	}
 }
 
+bool ThiefBot::botAction()
+{
+	Actor* actor;
+	for (int i = 0; i < getWorld()->getActorCount(); i++)
+	{
+		getWorld()->getActor(actor, i);
+		if (actor->getX() == getX() && actor->getY() == getY() && actor->stealable() && actor->isVisible() && m_goodie == nullptr)
+		{
+			if (!randInt(0, 9))
+			{
+				m_goodie = actor;
+				m_goodie->setVisible(false);
+				getWorld()->playSound(SOUND_ROBOT_MUNCH);
+				return true;
+			}
+		}
+	}
+	return false;
+}
+
+void ThiefBot::moveBot()
+{
+	if (m_squaresMoved < m_turnDist)
+	{
+		if (canMoveInDir())
+		{
+			m_squaresMoved++;
+			return;
+		}
+	}
+	m_turnDist = randInt(1, 6);
+	int tempDir = randInt(0, 3);
+	for (int i = 0; i < 4; i++)
+	{
+		break;
+	}
+}
+
 bool Marble::bePushedTo(int dir)
 {
 	switch (dir)
@@ -300,7 +342,7 @@ void Pea::movePea()
 
 void Item::uniqueAction()
 {
-	if (getWorld()->playerX() == getX() && getWorld()->playerY() == getY())
+	if (getWorld()->playerX() == getX() && getWorld()->playerY() == getY() && isVisible())
 	{
 		getWorld()->increaseScore(m_bonus);
 		kill();

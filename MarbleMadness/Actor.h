@@ -19,6 +19,7 @@ public:
 	virtual bool attackable() const { return false; }
 	virtual bool swallowable() const { return false; }
 	virtual bool bobotic() const { return false; }
+	virtual bool stealable() const { return false; }
 	virtual bool bePushedTo(int dir) { return false; }
 	virtual void damaged() { return; }
 	virtual void setHp(int hp) { m_hp = hp; }
@@ -88,7 +89,7 @@ public:
 	Bot(StudentWorld* world, int imageID, int startX, int startY, int bonus, int dir = right) : Agent(world, imageID, startX, startY, dir), m_tickCount(0), m_bonus(bonus) {}
 	virtual bool bobotic() const { return true; }
 	virtual void uniqueAction();
-	virtual void botAction();
+	virtual bool botAction();
 	virtual void moveBot() = 0;
 	bool canMoveInDir();
 	bool playerShootable();
@@ -111,10 +112,13 @@ private:
 class ThiefBot : public Bot
 {
 public:
-	ThiefBot(StudentWorld* world, int startX, int startY, int bonus, int imageID = IID_THIEFBOT) : Bot(world, imageID, startX, startY, bonus), m_turnDist(randInt(1, 6)) { setHp(5); }
-	virtual void botAction() { return; }
+	ThiefBot(StudentWorld* world, int startX, int startY, int bonus, int imageID = IID_THIEFBOT) : Bot(world, imageID, startX, startY, bonus), m_turnDist(randInt(1, 6)), m_squaresMoved(0), m_goodie(nullptr) { setHp(5); }
+	virtual bool botAction();
+	virtual void moveBot();
 private:
 	int m_turnDist;
+	int m_squaresMoved;
+	Actor* m_goodie;
 };
 
 class Marble : public Agent
@@ -168,6 +172,7 @@ class Item : public Actor
 public:
 	Item(StudentWorld* world, int imageID, int startX, int startY, int bonus) : Actor(world, imageID, startX, startY), m_bonus(bonus) {}
 	virtual bool canMoveOn() const { return true; }
+	virtual bool stealable() const { return true; }
 	virtual void uniqueAction();
 	virtual void bonusAction() = 0;
 private:
@@ -178,6 +183,7 @@ class Crystal : public Item
 {
 public:
 	Crystal(StudentWorld* world, int startX, int startY) : Item(world, IID_CRYSTAL, startX, startY, 50) {}
+	virtual bool stealable() const { return false; }
 	virtual void bonusAction();
 private:
 };
