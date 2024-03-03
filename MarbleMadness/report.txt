@@ -1,0 +1,11 @@
+1.
+The co-location or collision of the player and a goodie(that is alive) is handled by the goodie and StudentWorld. When the goodie is asked to do something in its Item::doSomething() method, the goodie's Item::uniqueAction() method is called and checks if the player is on its tile. If the player is on the same tile as the goodie, the goodie first tells the StudentWorld to increase the score by its bonus point value, and then it sets itself to dead. Then, the got_goodie sound is played, and an Item::bonusAction() method is called in which the appropriate buff to the player is given through the StudentWorld functions StudentWorld::incLives(), StudentWorld::playerRestore(), and StudentWorld::playerAmmo(). The player class does not handle any goodie mechanics. Goodies were handled in a base class called Item that also included the Crystal class.
+
+2.
+I believe I have been able to implement a fully functioning version of the game with no known bugs.
+
+3.
+Assumptions and design decisions:
+- It was not specified whether or not the player's status(such as ammo count and health) should carry over between levels, so I decided to not implement this and have the player's status reset every new level since the sample executable did not carry over player status.
+- During testing, I noticed that if a level was created with 0 crystals, the player fire sound effect would play upon starting the level. Nothing was said about this in the spec, but since the same behavior happened in the sample executable, I left it alone.
+- It was not specified what we should do if ammo exceeds 999 (making it more than 3 characters long), so I left it alone since the sample executable simply displayed it as is.
