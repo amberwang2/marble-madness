@@ -9,3 +9,4 @@ Assumptions and design decisions:
 - It was not specified whether or not the player's status(such as ammo count and health) should carry over between levels, so I decided to not implement this and have the player's status reset every new level since the sample executable did not carry over player status.
 - During testing, I noticed that if a level was created with 0 crystals, the player fire sound effect would play upon starting the level. Nothing was said about this in the spec, but since the same behavior happened in the sample executable, I left it alone.
 - It was not specified what we should do if ammo exceeds 999 (making it more than 3 characters long), so I left it alone since the sample executable simply displayed it as is.
+- I noticed that the order of asking actors to doSomething() mattered, as making the player the last actor to move during the tick made my game more consistent with the sample executable.
